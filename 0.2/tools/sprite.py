@@ -11,9 +11,15 @@ class Sprite(pg.sprite.Sprite):
     def __init__(self, Game, img, x = None,  y = None):
         pg.sprite.Sprite.__init__(self)
         self.game = Game
+        self.x_axis = [1,0]
         self.position = vec2D(0,0) 
-        self.direction = vec2D(-1,0).normalize()
+        self.direction = vec2D(1,0).normalize()
+        self.angle = vec2D.as_polar(self.direction)[1]
         self.screen  =  self.game.screen
+        self.speed = 10
+        self.anglespeed = 1
+        # remember this 
+        self.scale =1
 
         '''=========================initial Sprite image and rect======================'''
         self.imageOri = img
@@ -24,6 +30,8 @@ class Sprite(pg.sprite.Sprite):
         self.rect.center = (self.position)
         
     def update(self, camera = None):
+        self.angle = vec2D.as_polar(self.direction)[1]
+        self.image = pg.transform.rotozoom(self.imageOri, -self.angle, self.scale)
         self.rect.center = self.position
         
 class Souldier(Sprite):
@@ -38,10 +46,13 @@ class Souldier(Sprite):
         Sprite.__init__(self, Game, img)
         
     def Move(self, direction = vec2D(0,0)):
-        direction = direction.normalize()
-        print('Move ', direction)
-        if self.direction != direction:
-            self.position += self.direction+direction
+        if direction != vec2D(0,0):
+            direction = direction.normalize()*self.anglespeed
+            self.direction = self.direction.normalize()
+            if self.direction+direction != vec2D(0,0):
+                self.direction = (self.direction + direction)
+                self.direction = self.direction.normalize()
+                self.position += self.direction*self.speed
 
 class Character(Souldier):
     def __init__(self, Game , Name = "Unkown", Race = 'Indo'):
@@ -61,10 +72,16 @@ class Player(Character):
         self.game = Game
         self.Race = Race
         self.Name = Name
-		
+        self.moveVec = vec2D(0,0)
         '''========================== INITIAL SOULDIER CLASS =========================='''
         Character.__init__(self, Game, self.Name, self.Race)
-        
+    
+    
+    def update(self, camera = None):
+        if self.moveVec != vec2D(0,0):
+            self.Move(self.moveVec)
+            
+        Sprite.update(self, camera)
       
         
         

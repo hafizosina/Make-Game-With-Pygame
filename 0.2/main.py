@@ -25,7 +25,7 @@ class Game:
         pg.init()
         pg.mixer.init()
         self.clock = pg.time.Clock()
-        pg.key.set_repeat(100,100)
+        pg.key.set_repeat(100,1000)
         
         
         '''=========================== SETUP WINDOW ========================='''

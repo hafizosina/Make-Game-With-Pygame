@@ -257,21 +257,19 @@ class combatSystem:
             self.begin()
             
         self.pause = self.game.pause
+        keys = pg.key.get_pressed()
         if not self.pause: # PLAY THE GAME
-            for key in pg.key.get_pressed():
-                print(event)
-                if event.type == pg.KEYDOWN:
-                    print(event.type)
-                    arah  = vec2D(0,0)
-                    if event.key == pg.K_w:
-                        arah  += vec2D(0,-1)
-                    if event.key == pg.K_s:
-                        arah  += vec2D(0,1)
-                    if event.key == pg.K_a:
-                        arah  += vec2D(-1,0)
-                    if event.key == pg.K_d:
-                        arah  += vec2D(1,0)
-                    self.Player.Move(arah)
+            arah  = vec2D(0,0)
+            if keys[pg.K_w]:
+                arah  += vec2D(0,-1)
+            if keys[pg.K_s]:
+                arah  += vec2D(0,1)
+            if keys[pg.K_a]:
+                arah  += vec2D(-1,0)
+            if keys[pg.K_d]:
+                arah  += vec2D(1,0)
+            self.Player.moveVec = arah
+                
         elif self.pause: # PAUSE THE GAME
             pass
     def update(self):
